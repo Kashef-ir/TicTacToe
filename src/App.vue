@@ -27,12 +27,37 @@ const calculateWinner = (squares) => {
   return null;
 };
 const winner = computed(() => calculateWinner(board.value.flat()));
-const makeMove = (x, y) => {
+const isSinglePlayer = ref(true)
+const makeAIMove = () => {
   if (winner.value) return;
-  if (board.value[x][y] !== "") return;
+
+  const emptyCells = [];
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (board.value[i][j] === "") {
+        emptyCells.push([i, j]);
+      }
+    }
+  }
+  if (emptyCells.length === 0) return;
+  const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
   board.value[x][y] = player.value;
-  player.value = player.value === "X" ? "O" : "X";
+  player.value = "X";
 };
+
+const makeMove = (x, y) => {
+  if (winner.value || board.value[x][y] !== "") return;
+  board.value[x][y] = player.value;
+  if (isSinglePlayer.value && player.value === "X") {
+    player.value = "O";
+    setTimeout(() => {
+      makeAIMove();
+    }, 300); 
+  } else {
+    player.value = player.value === "X" ? "O" : "X";
+  }
+};
+
 
 const resetGame = () => {
   board.value = [
