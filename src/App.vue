@@ -27,7 +27,7 @@ const calculateWinner = (squares) => {
   return null;
 };
 const winner = computed(() => calculateWinner(board.value.flat()));
-const isSinglePlayer = ref(true)
+const isSinglePlayer = ref(true);
 const makeAIMove = () => {
   if (winner.value) return;
 
@@ -47,17 +47,23 @@ const makeAIMove = () => {
 
 const makeMove = (x, y) => {
   if (winner.value || board.value[x][y] !== "") return;
+
   board.value[x][y] = player.value;
+
   if (isSinglePlayer.value && player.value === "X") {
     player.value = "O";
     setTimeout(() => {
       makeAIMove();
-    }, 300); 
+    }, 300);
   } else {
     player.value = player.value === "X" ? "O" : "X";
   }
 };
 
+const toggleMode = () => {
+  isSinglePlayer.value = !isSinglePlayer.value;
+  resetGame();
+};
 
 const resetGame = () => {
   board.value = [
@@ -65,7 +71,7 @@ const resetGame = () => {
     ["", "", ""],
     ["", "", ""],
   ];
-  player.value = Math.random() < 0.5 ? "X" : "O";
+  player.value = "X";
 };
 </script>
 
@@ -74,20 +80,44 @@ const resetGame = () => {
     class="pt-8 text-center dark: bg-gray-800 min-h-screen dark: text-white"
   >
     <h1 class="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
-    <h3 class="text-xl mb-4">Player {{ player }}'s turn</h3>
+    <div class="mb-4">
+      <button
+        @click="toggleMode"
+        class="px-4 py-2 bg-blue-500 rounded hover:bg-blue-700 duration-300"
+      >
+        {{
+          isSinglePlayer ? "Switch to 2 Player Mode" : "Switch to 1 Player Mode"
+        }}
+      </button>
+    </div>
+
+    <h3 class="text-xl mb-4">
+      {{ isSinglePlayer ? "Single Player Mode" : "Two Player Mode" }} - Player
+      {{ player }}'s turn
+    </h3>
+
     <div class="flex flex-col items-center mb-8">
       <div v-for="(row, x) in board" :key="x" class="flex">
         <div
           v-for="(cell, y) in row"
           :key="y"
           @click="makeMove(x, y)"
-          :class="`border border-white w-20 h-20 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer ${cell === 'X' ? 'text-pink-500' : 'text-blue-500'}`"
+          :class="`border border-white w-20 h-20 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer ${
+            cell === 'X' ? 'text-pink-500' : 'text-blue-500'
+          }`"
         >
           {{ cell === "X" ? "X" : cell === "O" ? "O" : "" }}
         </div>
       </div>
     </div>
-    <h2 v-if="winner" class="text-6xl mb-8 font-bold">Player {{ winner }} wins!</h2>
-    <button @click="resetGame" class="px-4 py-2 bg-pink-500 rounded uppercase hover:bg-pink-800 cursor-pointer duration-300">Reset Game</button>
+    <h2 v-if="winner" class="text-6xl mb-8 font-bold">
+      Player {{ winner }} wins!
+    </h2>
+    <button
+      @click="resetGame"
+      class="px-4 py-2 bg-pink-500 rounded uppercase hover:bg-pink-800 cursor-pointer duration-300"
+    >
+      Reset Game
+    </button>
   </main>
 </template>
