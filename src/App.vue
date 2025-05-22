@@ -31,19 +31,81 @@ const isSinglePlayer = ref(true);
 const makeAIMove = () => {
   if (winner.value) return;
 
-  const emptyCells = [];
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (board.value[i][j] === "") {
-        emptyCells.push([i, j]);
+  const flatBoard = board.value.flat();
+
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  const checkAndPlay = (targetPlayer) => {
+    for (let [a, b, c] of lines) {
+      const line = [flatBoard[a], flatBoard[b], flatBoard[c]];
+      const indices = [a, b, c];
+      const count = line.filter(cell => cell === targetPlayer).length;
+      const emptyIndex = line.findIndex(cell => cell === "");
+
+      if (count === 2 && emptyIndex !== -1) {
+        const moveIndex = indices[emptyIndex];
+        const x = Math.floor(moveIndex / 3);
+        const y = moveIndex % 3;
+        board.value[x][y] = "O";
+        player.value = "X";
+        return true;
       }
     }
+    return false;
+  };
+
+  // Try to win
+  if (checkAndPlay("O")) return;
+  // Try to block
+  if (checkAndPlay("X")) return;
+
+  // Take center
+  if (board.value[1][1] === "") {
+    board.value[1][1] = "O";
+    player.value = "X";
+    return;
   }
-  if (emptyCells.length === 0) return;
-  const [x, y] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-  board.value[x][y] = player.value;
-  player.value = "X";
+
+  // Take a corner
+  const corners = [
+    [0, 0],
+    [0, 2],
+    [2, 0],
+    [2, 2],
+  ];
+  for (let [x, y] of corners) {
+    if (board.value[x][y] === "") {
+      board.value[x][y] = "O";
+      player.value = "X";
+      return;
+    }
+  }
+
+  // Take any side
+  const sides = [
+    [0, 1],
+    [1, 0],
+    [1, 2],
+    [2, 1],
+  ];
+  for (let [x, y] of sides) {
+    if (board.value[x][y] === "") {
+      board.value[x][y] = "O";
+      player.value = "X";
+      return;
+    }
+  }
 };
+
 
 const makeMove = (x, y) => {
   if (winner.value || board.value[x][y] !== "") return;
