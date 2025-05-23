@@ -102,6 +102,6 @@ Want to improve the AI, add animations, or make it multiplayer? Feel free to for
 
 ---
 
-### Made with ❤️ by \[Kashef]
+### Made with ❤️ by Kashef
 
 ---
