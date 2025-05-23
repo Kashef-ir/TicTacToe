@@ -48,8 +48,8 @@ const makeAIMove = () => {
     for (let [a, b, c] of lines) {
       const line = [flatBoard[a], flatBoard[b], flatBoard[c]];
       const indices = [a, b, c];
-      const count = line.filter(cell => cell === targetPlayer).length;
-      const emptyIndex = line.findIndex(cell => cell === "");
+      const count = line.filter((cell) => cell === targetPlayer).length;
+      const emptyIndex = line.findIndex((cell) => cell === "");
 
       if (count === 2 && emptyIndex !== -1) {
         const moveIndex = indices[emptyIndex];
@@ -105,7 +105,6 @@ const makeAIMove = () => {
     }
   }
 };
-
 
 const makeMove = (x, y) => {
   if (winner.value || board.value[x][y] !== "") return;
@@ -172,7 +171,7 @@ const resetGame = () => {
         </div>
       </div>
     </div>
-    <h2 v-if="winner" class="text-6xl mb-8 font-bold">
+    <h2 v-if="winner" class="text-3xl mb-8 font-bold">
       Player {{ winner }} wins!
     </h2>
     <button
@@ -181,5 +180,16 @@ const resetGame = () => {
     >
       Reset Game
     </button>
+    <footer class="mt-12 text-center text-gray-400 text-sm">
+      Made with ❤️ by
+      <a
+        href="https://github.com/kashef-ir"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-blue-400 hover:underline"
+      >
+        Kashef
+      </a>
+    </footer>
   </main>
 </template>
