@@ -183,7 +183,7 @@ const resetGame = () => {
     <footer class="mt-12 text-center text-gray-400 text-sm">
       Made with ❤️ by
       <a
-        href="https://github.com/kashef-ir"
+        href="https://github.com/kashef-ir/TicTacToe"
         target="_blank"
         rel="noopener noreferrer"
         class="text-blue-400 hover:underline"
